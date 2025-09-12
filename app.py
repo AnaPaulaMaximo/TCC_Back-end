@@ -1,20 +1,28 @@
-import mysql.connector
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
-from config import conn, cursor
+from flask_socketio import SocketIO, emit
+import mysql.connector
 import google.generativeai as genai
-import os
 from dotenv import load_dotenv
-from mysql.connector.errors import IntegrityError
+import os
+from uuid import uuid4
 
+# Configurações
 load_dotenv()
-
 app = Flask(__name__)
-CORS(app)
+app.secret_key = "uma_chave_secreta_muito_forte_padrao"
+CORS(app, resources={r"/*": {"origins": "*"}})
+socketio = SocketIO(app, cors_allowed_origins="*")
 
+# Conexão MySQL
+from config import conn, cursor
+
+# Config Google GenAI
 API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=API_KEY)
 
+# ===================================
+# Rotas da API principal 
 @app.route('/')
 def index():
     return 'API ON', 200
@@ -206,7 +214,46 @@ Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo ter
         return jsonify({"assunto": tema, "contedo": texto})
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
+# ===================================
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+# ===================================
+# Chatbot com SocketIO
+# ===================================
+instrucoes = """Você é um assistente de IA focado em ajudar estudantes com temas de filosofia e sociologia, de maneira didática e interativa."""
+active_chats = {}
 
+def get_user_chat():
+    if 'session_id' not in session:
+        session['session_id'] = str(uuid4())
+
+    session_id = session['session_id']
+    if session_id not in active_chats:
+        chat_session = genai.GenerativeModel("gemini-2.0-flash").start_chat(
+            history=[
+                {"role": "user", "parts": [instrucoes]},
+                {"role": "model", "parts": ["Olá! Em que posso te ajudar com filosofia ou sociologia?"]}
+            ]
+        )
+        active_chats[session_id] = chat_session
+    return active_chats[session_id]
+
+@socketio.on('connect')
+def handle_connect():
+    emit('status_conexao', {'data': 'Conectado com sucesso!'})
+
+@socketio.on('enviar_mensagem')
+def handle_enviar_mensagem(data):
+    mensagem_usuario = data.get("mensagem")
+    if not mensagem_usuario:
+        emit('erro', {"erro": "Mensagem não pode ser vazia."})
+        return
+    
+    user_chat = get_user_chat()
+    resposta = user_chat.send_message(mensagem_usuario)
+    emit('nova_mensagem', {"remetente": "bot", "texto": resposta.text})
+# ===================================
+
+
+# Inicialização
+if __name__ == "__main__":
+    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
