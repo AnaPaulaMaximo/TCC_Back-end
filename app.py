@@ -228,10 +228,10 @@ def get_user_chat():
 
     session_id = session['session_id']
     if session_id not in active_chats:
-        chat_session = genai.GenerativeModel("gemini-2.0-flash").start_chat(
+        chat_session = genai.GenerativeModel("gemini-1.5-flash").start_chat(
             history=[
                 {"role": "user", "parts": [instrucoes]},
-                {"role": "model", "parts": ["Olá! Em que posso te ajudar com filosofia ou sociologia?"]}
+                {"role": "model", "parts": [""]}
             ]
         )
         active_chats[session_id] = chat_session
@@ -240,6 +240,11 @@ def get_user_chat():
 @socketio.on('connect')
 def handle_connect():
     emit('status_conexao', {'data': 'Conectado com sucesso!'})
+    # Envia a mensagem de boas-vindas ao se conectar
+    user_chat = get_user_chat()
+    welcome_message = user_chat.history[-1].parts[0].text
+    emit('nova_mensagem', {"remetente": "bot", "texto": welcome_message})
+
 
 @socketio.on('enviar_mensagem')
 def handle_enviar_mensagem(data):
@@ -256,4 +261,4 @@ def handle_enviar_mensagem(data):
 
 # Inicialização
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
+    socketio.run(app, host="0.0.0.0", port=5002, debug=True)
