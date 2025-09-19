@@ -10,7 +10,7 @@ from uuid import uuid4
 # Configurações
 load_dotenv()
 app = Flask(__name__)
-app.secret_key = "uma_chave_secreta_muito_forte_padrao"
+app.secret_key =os.getenv("SECRET_KEY")
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
 
