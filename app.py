@@ -109,8 +109,7 @@ Dado o tema '{tema}', primeiro avalie se ele é estritamente relacionado a filos
 
 O resumo deve ser focado nos principais tópicos do tema '{tema}'.
 
-Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo termos inadequados), retorne **APENAS** um JSON com a seguinte estrutura e mensagem de erro específica, sem texto adicional:
-{{"error_message": "Por favor, escolha um tema relacionado a filosofia ou sociologia, e que não seja preconceituoso, sexual ou inadequado."}}
+Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo termos inadequados), retorne **APENAS** NÃO É POSSIVEL FORMAR UMA RESPOSTA DEVIDO A INADEQUAÇÃO DO ASSUNTO.
 """
 
     try:
@@ -159,8 +158,7 @@ Dado o tema '{tema}', primeiro avalie se ele é estritamente relacionado a filos
 
 Se o tema for válido, Gere 12 perguntas para flashcards sobre o tema '{tema}'. Retorne a pergunta e a resposta correta, a resposta deve ser breve e acertiva. Estrutura: Pergunta: [pergunta] Resposta: [resposta]
 
-Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo termos inadequados), retorne **APENAS** um JSON com a seguinte estrutura e mensagem de erro específica, sem texto adicional:
-{{"error_message": "Por favor, escolha um tema relacionado a filosofia ou sociologia, e que não seja preconceituoso, sexual ou inadequado."}}
+Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo termos inadequados), retorne **APENAS** NÃO É POSSIVEL FORMAR UMA RESPOSTA DEVIDO A INADEQUAÇÃO DO ASSUNTO.
 """
 
     try:
@@ -205,8 +203,7 @@ Exemplo de formato JSON esperado para um quiz válido:
   }}
 ]
 
-Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo termos inadequados), retorne **APENAS** um JSON com a seguinte estrutura e mensagem de erro específica, sem texto adicional:
-{{"error_message": "Por favor, escolha um tema relacionado a filosofia ou sociologia, e que não seja preconceituoso, sexual ou inadequado."}}
+Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo termos inadequados), retorne **APENAS** NÃO É POSSIVEL FORMAR UMA RESPOSTA DEVIDO A INADEQUAÇÃO DO ASSUNTO.
 """
 
     try:
