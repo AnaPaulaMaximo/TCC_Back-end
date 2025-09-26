@@ -187,6 +187,8 @@ Se o tema for válido, gere um quiz com 10 questões sobre ele. Retorne as quest
 - "opcoes": (array de strings) Um array com 4 opções de resposta.
 - "resposta_correta": (string) A letra da opção correta (ex: "a", "b", "c", "d").
 **as quetões devem ser variadas de um quiz para outro, evite repetir as mesmas perguntas 
+- "explicacao": (string) Uma breve explicação (1-2 frases) do porquê a resposta correta está certa.
+**as quetões devem ser variadas de um quiz para outro, evite repetir as mesmas perguntas
 
 Exemplo de formato JSON esperado para um quiz válido:
 [
@@ -194,6 +196,7 @@ Exemplo de formato JSON esperado para um quiz válido:
     "pergunta": "Qual a capital do Brasil?",
     "opcoes": ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"],
     "resposta_correta": "c"
+    "explicacao": "Sigmund Freud foi um médico neurologista austríaco que fundou a psicanálise, um método para tratar doenças mentais através do diálogo."
   }},
   {{
     "pergunta": "Quem descobriu o Brasil?",
