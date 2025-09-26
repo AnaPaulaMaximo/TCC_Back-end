@@ -20,7 +20,7 @@ from config import conn, cursor
 # Config Google GenAI
 API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=API_KEY)
-
+MODEL_NAME = "gemini-2.0-flash"
 # ===================================
 # Rotas da API principal 
 @app.route('/')
@@ -114,7 +114,7 @@ Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo ter
 """
 
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel(MODEL_NAME)
         response = model.generate_content(prompt)
         texto = response.text.strip()
         return jsonify({"assunto": tema, "contedo": texto})
@@ -135,12 +135,11 @@ def correcao():
     prompt = f""""Você é um professor especializado em Filosofia e Sociologia. precisa corrigir o texto que seu aluno mandou sobre o tema '{tema}'. esse é o texto do aluno: '{texto}'.você terá que ver se oque eles escreveram está certo e dar um feedback de forma resumida, não foque na ortografia ou gramática e sim no conteúdo
  Dado o tema '{tema}', primeiro avalie se ele é estritamente relacionado a filosofia ou sociologia e se não contém conteúdo preconceituoso, sexual, violento ou inadequado de qualquer tipo.
 
-Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo termos inadequados), retorne **APENAS** um JSON com a seguinte estrutura e mensagem de erro específica, sem texto adicional:
-{{"error_message": "Por favor, escolha um tema relacionado a filosofia ou sociologia, e que não seja preconceituoso, sexual ou inadequado."}}
+Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo termos inadequados), retorne **APENAS** NÃO É POSSIVEL FORMAR UMA RESPOSTA DEVIDO A INADEQUAÇÃO DO ASSUNTO.
 """
 
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel(MODEL_NAME)
         response = model.generate_content(prompt)
         texto_corrigido = response.text.strip()
         return jsonify({"texto": texto, "contedo": texto_corrigido})
@@ -165,7 +164,7 @@ Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo ter
 """
 
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel(MODEL_NAME)
         response = model.generate_content(prompt)
         texto = response.text.strip()
         return jsonify({"assunto": tema, "contedo": texto})
@@ -208,7 +207,7 @@ Se o tema for inválido (não relacionado a filosofia/sociologia ou contendo ter
 """
 
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel(MODEL_NAME)
         response = model.generate_content(prompt)
         texto = response.text.strip()
         return jsonify({"assunto": tema, "contedo": texto})
@@ -228,7 +227,7 @@ def get_user_chat():
 
     session_id = session['session_id']
     if session_id not in active_chats:
-        chat_session = genai.GenerativeModel("gemini-1.5-flash").start_chat(
+        chat_session =genai.GenerativeModel(MODEL_NAME).start_chat(
             history=[
                 {"role": "user", "parts": [instrucoes]},
                 {"role": "model", "parts": [""]}
